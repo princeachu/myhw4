@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Quiz Game</title>
+</head>
+<body>
+
+	<!-- put a start button on a screen -->
+	<button id = "start">start</button>
+	<!-- Put an area for timer -->
+	<div id = "timer">Timer:</div>
+	<!-- put a area for the highscore -->
+	<div id = "highscore">Highscore</div>
+	<!-- put a diplay area for the questions -->
+	<hr>
+	Question: <div id = "questions" style="display:inline;"></div> [T/F]
+	<hr>
+	<!-- true button -->
+	<button id = "true">True</button>
+	<!-- false button  -->
+	<button id = "false">False</button>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		var questions = [
+			{q: "CSS stands for cascading style sheet.", a: "t"},
+			{q: "HTML stands for Hyper Text Markup Lyrics.", a: "f"},
+			{q: "HTML elements are represented by content.", a: "f"},
+			{q: "CSS is for adding content to the webpage.", a: "f"},
+			{q: "Javascript defines two type of values", a: "t"},
+		];
+
+		$(document).ready(function()
+		{
+			$('#start').on('click', function()
+			{
+				var count = 60, timer = setInterval(function()
+				{
+					$("#timer").html(count--);
+					if (count == -1)
+					{
+						clearInterval(timer);
+					}
+				}, 1000);
+
+				for (var i = 0; i < questions.length; i++)
+				{
+					var current_question = questions[i].q;
+					$('#questions').html(current_question);
+				}
+			});
+
+			$('#true').on('click', function()
+			{
+				console.log('true');
+				// True case
+			});
+
+			$('#false').on('click', function()
+			{
+				console.log('false');
+				// False case
+			});
+		});
+	</script>
+</body>
+</html>
