@@ -8,11 +8,11 @@
 <body>
 
 	<!-- put a start button on a screen -->
-	<button id = "start">start</button>
+	<button id = "start">start</button> <button id = "startOver">Start Over</button>
 	<!-- Put an area for timer -->
 	<div id = "timer">Timer:</div>
 	<!-- put a area for the highscore -->
-	<div id = "highscore">Highscore</div>
+	High Score: <span></span>  <div id = "highscore"></div>
 	<!-- put a diplay area for the questions -->
 	<hr>
 	Question: <div id = "questions" style="display:inline;"></div> [T/F]
@@ -24,6 +24,11 @@
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script type="text/javascript">
+	// get highscore from local storage 
+		var highScore = localStorage.getItem("correctCount");
+	// plug highscore into html
+	document.getElementById("highscore").innerHTML = highScore;
+	// an array of questions 	
 		var questions = [
 			{q: "CSS stands for cascading style sheet.", a: "t"},
 			{q: "HTML stands for Hyper Text Markup Lyrics.", a: "f"},
@@ -34,36 +39,95 @@
 
 		$(document).ready(function()
 		{
+		// declared variables 
+			var qcounter = 0;
+			var correctCount = 0;
+			var incorrectCount = 0;
+			var count = 0;
+			// insert 60 in the timer div once page loads 
+			$("#timer").html("60");
+			// the on click function starts the functions once start button clicked 
 			$('#start').on('click', function()
 			{
-				var count = 60, timer = setInterval(function()
+			// loop of the questions that get displayed in the current question div
+				var current_question = questions[qcounter].q;
+				$('#questions').html(current_question);
+			// set interval function that counts down from 60 to 0
+				count = 60, timer = setInterval(function()
 				{
 					$("#timer").html(count--);
 					if (count == -1)
 					{
+				// clear interval funtion stops the timer once it reaches 0 or game over
 						clearInterval(timer);
+						$("#timer").html("0");
+						gameOver();
 					}
 				}, 1000);
-
-				for (var i = 0; i < questions.length; i++)
-				{
-					var current_question = questions[i].q;
-					$('#questions').html(current_question);
-				}
 			});
-
+			// once true button is clicked if the question is true a score is added to correctCount if its wrong then 10 sec are subtracted from the timer
 			$('#true').on('click', function()
 			{
-				console.log('true');
 				// True case
-			});
+				 if(questions[qcounter].a == "t")
+					 correctCount++;
+				else {
+					incorrectCount++;
+					count = count - 10;
+					$("#timer").html(count);
+				}
 
+					nextQ();
+				
+			});
+			// once false button is clicked if the question is false a score is added to correctCount if its wrong then 10 sec are subtracted from the timer 
 			$('#false').on('click', function()
 			{
-				console.log('false');
 				// False case
+				if(questions[qcounter].a == "f")
+					 correctCount++;
+				else {
+					incorrectCount++;
+					count = count - 10;
+					$("#timer").html(count);
+				}
+					nextQ();
 			});
+			
+			
+
+			function nextQ(){
+				qcounter++
+				if(qcounter<questions.length){
+					current_question = questions[qcounter].q;
+					$('#questions').html(current_question);
+				}
+				else {
+					gameOver();
+				}
+			}
+			// once game is over incorrect and correct scores are presented in an alert if the correct score is higher than the current highscore it is changed to reflect the new high score
+			function gameOver(){
+				clearInterval(timer);
+				alert("Game over");
+				alert("Your score is : " + correctCount + " correct, " + incorrectCount + " incorrect.");
+				// if correctCount is greater than highscore
+				// send correctcount to local storage as highscore 
+				if(correctCount > highScore){
+					localStorage.setItem("correctCount", correctCount); 
+
+				}
+			
+
+			}
+			$('#startOver').on('click', function(){
+				location.reload();
+
+             });	
+			
+
 		});
+		
 	</script>
 </body>
 </html>
